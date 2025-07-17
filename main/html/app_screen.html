@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+    <meta charset="UTF-8" />
+    <title>柏崎スタンプラリー</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- QRコード -->
+    <script src="https://unpkg.com/html5-qrcode"></script>
+
+    <!-- style sheet-->
+    <link rel="stylesheet" href="../css/app_screen.css">
+
+</head>
+
+
+
+<body>
+
+<!------------------------------画面構成------------------------------>
+<!-- 構内マップ -->
+<div id="campus-map-container">
+    <button id="back-button">← 市内地図へ戻る</button>
+    <div id="campus-map">
+    <div class="spot" data-id="1" style="left: 300px; top: 90px;">1 未</div>
+    <div class="spot" data-id="2" style="left: 300px; top: 210px;">2 未</div>
+    <div class="spot" data-id="3" style="left: 20px; top: 180px;">3 未</div>
+    <div class="spot" data-id="4" style="left: 510px; top: 210px;">4 未</div>
+</div>
+
+<!-- QR画面 -->
+<div id="reader-container">
+    <button id="close-btn">✕</button>
+    <div id="reader"></div>
+</div>
+
+<button id="qr-button">QR</button>
+<div id="result"></div>
+
+  <!------------------------------------------------------------------>
+
+<script>
+    let map;
+    let marker;
+    let html5QrCode;
+
+    //------------------------------------------------------------------
+
+    // QR起動
+    document.getElementById("qr-button").addEventListener("click", () => {
+        const container = document.getElementById("reader-container");
+        const result = document.getElementById("result");
+        container.style.display = "block";
+        result.textContent = "";
+
+        html5QrCode = new Html5Qrcode("reader");
+
+        html5QrCode
+        .start(
+            { facingMode: "environment" },
+            {
+                fps: 10,
+                qrbox: { width: 200, height: 200 }
+            },
+            (decodedText) => {
+                result.innerHTML = `読み取り: <br>${decodedText}`;
+                html5QrCode.stop().then(() => {
+                    container.style.display = "none";
+                });
+
+                if (decodedText.startsWith("geo:")) {
+                    const coords = decodedText.slice(4).split(",");
+                    const lat = parseFloat(coords[0]);
+                    const lng = parseFloat(coords[1]);
+                    setMapLocation(lat, lng, "QR地点");
+                }
+                else if (decodedText.startsWith("http://") || decodedText.startsWith("https://")) {
+                    window.location.href = decodedText;
+                }
+                else {
+                result.innerHTML += "<br>（URLや位置情報ではありません）";
+                }
+            },
+            (error) => {
+                // 読み取り失敗は無視
+            }
+        )
+        .catch((err) => {
+            console.error("QRカメラ起動失敗:", err);
+            alert("カメラの起動に失敗しました。権限やブラウザ設定をご確認ください。");
+            container.style.display = "none";
+        });
+    });
+
+    // カメラを閉じる
+    document.getElementById("close-btn").addEventListener("click", () => {
+        const container = document.getElementById("reader-container");
+        if (html5QrCode) {
+            html5QrCode.stop().then(() => {
+            container.style.display = "none";
+            });
+        } 
+        else {
+        container.style.display = "none";
+        }
+    });
+
+    </script>
+</body>
+</html>
