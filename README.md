@@ -3,11 +3,11 @@ this is web application that stamp rally by QR marker
 
 <dt>「構成」</dt>
 
-<dd>
+```
     ・start_screen.html  : スタート画面 <br>
     ・allmap.html        : 全体マップの表示 <br>
     ・app_screen.html    : スタンプラリー画面 <br>
-</dd>
+```
 
 <dt>「仕様」</dt>
 
