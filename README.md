@@ -11,7 +11,7 @@ this is web application that stamp rally by QR marker
 
 <dt>「仕様」</dt>
 
-<dd>
+```
     start_screen.html　・スタートボタンでページ遷移、ユーザー登録<br>
                        ・注意書きや説明文の記載 (未実装)<br>
 
@@ -23,14 +23,14 @@ this is web application that stamp rally by QR marker
                        ・右下のボタンでカメラ起動、×ボタンでカメラ停止<br>
                        ・QRコード読み込み後、データベースの更新、ページの再読み込み<br>
                        ・QRコード読み込み時にコラム表示、完成時ポップアップの表示　(未実装)<br>
-</dd>
+```
 
 <dt>「TODOリスト」</dt>
 
-<dd>
+```
     ・スタート画面を押した後Cookieをサーバーに送信、存在しない場合ユーザー登録としてレコードとCookieの作成　　「start_screen.html」<br>
     ・ページ読み込み時にデータベースからデータを読み込み、スタンプの達成状況を反映　　「app_screen.html」<br>
     ・QRコード読み込み時に読み取ったデータをサーバーに送信してデータベースを更新　　　「app_screen.html」<br>
-</dd>
+```
 
   
