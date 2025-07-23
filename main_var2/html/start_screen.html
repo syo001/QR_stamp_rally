@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+    <meta charset="UTF-8" />
+    <title>スタート画面</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- style sheet-->
+    <link rel="stylesheet" href="../css/start_screen.css">
+
+</head>
+
+
+<body>
+    <!-- ① スタート画面 -->
+    <div id="start-screen">
+        <h1>柏崎スタンプラリー</h1>
+        <button id="start-button">スタート</button>
+    </div>
+
+    <script>
+    // スタートボタン押下 → アプリ画面に
+        document.getElementById("start-button").addEventListener("click", () => {
+            // TODO Cookieの確認　→　存在するならpass、ないなら新たなレコードとcookieの作成
+
+            location.href = "allmap.html";
+        });
+    </script>
+</body>

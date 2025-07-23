@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+    <meta charset="UTF-8" />
+    <title>柏崎スタンプラリー</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- QRコード -->
+    <script src="https://unpkg.com/html5-qrcode"></script>
+
+    <!-- style sheet-->
+    <link rel="stylesheet" href="../css/app_screen.css">
+    <link rel="stylesheet" href="../css/popup.css">             <!--append by y-->
+
+</head>
+
+
+
+<body>
+
+<!------------------------------画面構成------------------------------>
+<!-- 構内マップ -->
+<div id="campus-map-container">
+    <button id="back-button">← 市内地図へ戻る</button>
+    <div id="campus-map">
+        <label for="popupFlag1" class="spot" data-id="1" style="left: 50%; top: 5%;">1</label>
+        <label for="popupFlag2" class="spot" data-id="2" style="left: 40%; top: 30%;">2</label>
+        <label for="popupFlag3" class="spot" data-id="3" style="left: 10%; top: 20%;">3</label>
+        <label for="popupFlag4" class="spot" data-id="4" style="left: 60%; top: 30%;">4</label>     <!--changed by y-->
+    </div>
+
+    <!-- QR画面 -->
+    <div id="reader-container">
+        <button id="close-btn">✕</button>
+        <div id="reader"></div>
+    </div>
+
+    <button id="qr-button">QR</button>
+    <div id="result"></div>
+
+</div>
+
+<!------------------------------append by y------------------------------>
+    <!--popup-template-->
+    <input type="checkbox" class="popup-flag" id="popupFlag1">
+    <label class="popup-background" for="popupFlag1"></label>
+    <div class="popup">
+        <label class="close-button" for="popupFlag1">×</label>
+        <div class="text_common_1">QRコードの在処</div>
+        <div class="content_1"></div>
+        <div class="text_column_1">
+            IoTソフトウェア工学研究室<br>
+            別名堀研究室と呼ばれている<br>
+            どうやら一人だけよさげな椅子に座り<br>
+            偉そうにしている院生がいるらしい
+        </div>
+    </div> 
+
+    <input type="checkbox" class="popup-flag" id="popupFlag2">
+    <label class="popup-background" for="popupFlag2"></label>
+    <div class="popup">
+        <label class="close-button" for="popupFlag2">×</label>
+        <div class="text_common_1">QRコードの在処</div>
+        <div class="content_2"></div>
+        <div class="text_column_1">
+            空の木<br>
+            建築コースの学生が設計したスペース<br>
+            畳や木を基調としており<br>
+            落ち着いた雰囲気を感じられる<br>
+        </div>
+    </div>
+
+    <input type="checkbox" class="popup-flag" id="popupFlag3">
+    <label class="popup-background" for="popupFlag3"></label>
+    <div class="popup">
+        <label class="close-button" for="popupFlag3">×</label>
+        <div class="text_common_1">QRコードの在処</div>
+        <div class="content_3"></div>
+        <div class="text_column_1">
+            楽風（らふ）<br>
+            新潟工科大学の学食である<br>
+            お昼にはたくさんの学生が使用するため<br>
+            長蛇の列が形成される
+        </div>
+    </div>
+
+    <input type="checkbox" class="popup-flag" id="popupFlag4">
+    <label class="popup-background" for="popupFlag4"></label>
+    <div class="popup">
+        <label class="close-button" for="popupFlag4">×</label>
+        <div class="text_common_1">QRコードの在処</div>
+        <div class="content_4"></div>
+        <div class="text_column_1">
+            フリーコモンズ<br>
+            計算機実習室からpcを撤去したため<br>
+            憩いの場として改修された<br>
+            仮眠スペースや個人スペースもある
+        </div>
+    </div>
+
+
+    <input type="checkbox" class="popup-flag" id="popupFlag5">
+    <label class="popup-background" for="popupFlag5"></label>
+    <div class="popup_end">
+        <label class="close-button" for="popupFlag5">×</label>
+        <div class="content_5"></div>
+    </div>
+
+<!------------------------------append by y------------------------------>
+  <!------------------------------------------------------------------>
+
+<script>
+    let map;
+    let marker;
+    let html5QrCode;
+
+    //------------------------------------------------------------------
+    window.onload = function() {
+        //TODO データベースから全スポットの情報を取得。
+
+        document.querySelectorAll('.spot').forEach(spot => {
+            const id = parseInt(spot.dataset.id);
+            const isCleared = false  //消去予定
+            //const isCleared = データベースの情報 T or F (database [id])
+            if (isCleared){
+                spot.classList.toggle('cleared', isCleared);
+            }
+        });
+
+    //------------------------------append by y------------------------------
+    
+        if (true){  //全スポットがtrueであった場合
+            const checkbox = document.getElementById("popupFlag5");
+            checkbox.checked = true;
+        }
+    };
+
+    //------------------------------append by y------------------------------
+
+
+    // QR起動
+    document.getElementById("qr-button").addEventListener("click", () => {
+        const container = document.getElementById("reader-container");
+        const result = document.getElementById("result");
+        container.style.display = "block";
+        result.textContent = "";
+
+        html5QrCode = new Html5Qrcode("reader");
+
+        html5QrCode
+        .start(
+            { facingMode: "environment" },
+            {
+                fps: 10,
+                qrbox: { width: 100, height: 100 }
+            },
+            (decodedText) => {
+                result.innerHTML = `読み取り: <br>${decodedText}`;
+                html5QrCode.stop().then(() => {
+                    container.style.display = "none";
+                });
+
+                //TODO 読み取ったデータをサーバーに送信し、データベースを更新。読み取ったデータは変数に保持
+
+                if (decodedText.startsWith("geo:")) {
+                    const coords = decodedText.slice(4).split(",");
+                    const lat = parseFloat(coords[0]);
+                    const lng = parseFloat(coords[1]);
+                    setMapLocation(lat, lng, "QR地点");
+                }
+                else if (decodedText.startsWith("http://") || decodedText.startsWith("https://")) {
+                    window.location.href = decodedText;
+                }
+                else {
+                result.innerHTML += "<br>（URLや位置情報ではありません）";
+                }
+            },
+            (error) => {
+                // 読み取り失敗は無視
+            }
+        )
+        .catch((err) => {
+            console.error("QRカメラ起動失敗:", err);
+            alert("カメラの起動に失敗しました。権限やブラウザ設定をご確認ください。");
+            container.style.display = "none";
+        });
+    });
+
+    // カメラを閉じる
+    document.getElementById("close-btn").addEventListener("click", () => {
+        const container = document.getElementById("reader-container");
+        if (html5QrCode) {
+            html5QrCode.stop().then(() => {
+            container.style.display = "none";
+            });
+        } 
+        else {
+        container.style.display = "none";
+        }
+    });
+
+    // 全体マップに戻るボタン
+    document.getElementById('back-button').addEventListener('click', () => {
+        location.href = "allmap.html";
+    });
+    
+
+</script>
+</body>
+</html>
