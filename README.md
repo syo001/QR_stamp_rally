@@ -33,4 +33,17 @@ this is web application that stamp rally by QR marker
     ・QRコード読み込み時に読み取ったデータをサーバーに送信してデータベースを更新　　　「app_screen.html」
 ```
 
+<dt>「変更点」changed by y 2025/07/23</dt>
+
+```
+    app_screen.html     ・14行目　    追加
+                        ・27~30行目　 変更
+                        ・44~110行目　追加
+                        ・131~139行目 追加　　TODO　データベースの要素が全trueの場合に条件分岐　→　ポップアップ表示
+
+    CSS                 ・popup.css   追加
+
+    image               ・各種画像5枚追加
+    
+```
   
